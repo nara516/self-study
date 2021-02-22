@@ -1,0 +1,112 @@
+# dplyr 패키지 로드
+library(dplyr)
+
+df_exam <-read.csv("csv_exam.csv")
+df_exam
+
+#1반 학생들 데이터만 추출
+df_exam %>% filter(class == 1)
+
+#1반이 아닌 데이터 추출
+df_exam %>% filter(class != 1)
+
+#초과, 미만, 이상, 이하 조건 걸기
+df_exam %>% filter(math >50)
+df_exam %>% filter(math <50)
+df_exam %>% filter(english >= 80)
+df_exam %>% filter(english <= 80)
+
+#AND 조건 걸기
+df_exam %>% filter(class == 1 && math>=50)
+
+#OR 조건 걸기
+df_exam %>% filter(math >90 | english >=90)
+df_exam %>% filter(class ==1 | class ==3 |class ==5)
+
+df_exam %>% filter(class == 1 | math>=50)
+
+#지정한 조건 목록에 해당하는 변수 값 찾기
+df_exam %>%  filter(class %in% c(1,3,5))
+
+#추출한 행으로 데이터 만들기
+class1 <- df_exam %>%  filter(class == 1)
+class2 <- df_exam %>% filter(class ==2)
+mean(class1 $ math)
+mean(class2 $ math)
+
+#필요한 변수만 추출하기
+df_exam %>% select(math)
+df_exam %>% select(class, math, english)
+
+#특정 변수 제외하기
+df_exam %>% select(-math)
+df_exam %>% select(-math, -english)
+
+#dplyr함수 조합하기
+df_exam %>% filter(class ==1) %>% select(english)
+
+#일부만 출력하기
+df_exam %>% select(id, math) %>% head
+df_exam %>% select(id, math) %>% head(10)
+
+#순서대로 정렬하기
+#오름차순
+df_exam %>% arrange(math)
+df_exam %>% arrange(class, math)
+#내림차순
+df_exam %>% arrange(desc(math))
+
+#파생변수 추가하기
+df_exam %>% mutate(toral = math + english + science) %>% head
+df_exam %>% mutate(total = math + english + science, mean = (math + english + science)/3) %>% head
+
+#조건에 따라 다른 값을 부여한 변수 추가
+df_exam %>% mutate(test=ifelse(science >= 60, "pass","fall")) %>% head
+
+#추가한 변수 바로 활용하기
+df_exam %>% mutate(total=math+english+science) %>% arrange(total) %>% head
+
+#집단별로 요약하기
+df_exam %>% summarise(mean_math = mean(math))
+df_exam %>% group_by(class) %>% summarise(mean_math = mean(math))
+
+#여러 요약 통계량 한번에 산출하기
+df_exam %>% group_by(class) %>% summarise(mean_math = mean(math),
+                                          sum_math = sum(math),
+                                          median_math = median(math),
+                                          mean_english = mean(english),
+                                          sum_english = sum(english),
+                                          median_english = median(english),
+                                          mean_science = mean(science),
+                                          sum_science = sum(science),
+                                          median_science = median(science),
+                                          n = n())
+
+#각 집단별로 다시 집단 나누기 (work)
+mpq %>% group_by(manufacturer, drv) %>% summarise(mean_cty = mean(cty)) %>% head(10)
+
+#데이터 합치기
+#중간고사, 기말고사, 담임교사 데이터 생성
+test1<-data.frame(id=c(1,2,3,4,5),
+                  meidterm = c(60,80,70,90,85))
+test2<-data.frame(id=c(1,2,3,4,5),
+                  final=c(70,83,65,95,80))
+name<-data.frame(class=c(1,2,3,4,5),
+                 teacher=c("kim","lee","park","choi","jung"))
+exam<-data.frame(class=c(1:5),
+                 student=c(6:10))
+#가로로 합치기
+total <-left_join(test1, test2, by = "id")
+total
+exam_new <-left_join(exam, name, by = "class")
+exam_new 
+
+#세로로 합치기
+group_a<-data.frame(id=c(1,2,3,4,5),
+                    test=c(60,80,70,90,85))
+group_b<-data.frame(id=c(6,7,8,9,10),
+                    test=c(70,83,65,95,80))
+group_all <-bind_rows(group_a, group_b)
+
+#만약 id번호가 같다면?
+#데이터를 세로로 합칠 때는 두 데이터의 변수 명이 같아야함
