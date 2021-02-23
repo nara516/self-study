@@ -1,0 +1,13 @@
+def solution(board, moves):
+    crash = []
+    res = []
+    for i in moves:
+        for j in range(len(board)):
+            if board[j][i-1] > 0:
+                crash.append(board[j][i-1])
+                board[j][i-1] = 0
+                if crash[-1:] == crash[-2:-1]:
+                    res += crash[-1:]
+                    crash = crash[:-2]
+                break
+    return len(res) * 2
