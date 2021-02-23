@@ -1,0 +1,47 @@
+import re
+
+def solution(new_id):
+    # 1단계
+    new_id = new_id.lower()
+    print("1단계",new_id)
+    
+    # 2단계
+    new_id = re.sub(r'[^a-z0-9._-]','', new_id)
+    print("2단계",new_id)
+    
+    # 3단계
+    new_id = re.sub(r"[.]{2,}",".", new_id)
+    print("3단계",new_id)
+    
+    # 4단계
+    if len(new_id) > 0 and new_id[0] == ".":
+        new_id = list(new_id)
+        new_id[0] = ""
+        new_id = ''.join(new_id)
+    if len(new_id) > 0 and new_id[-1] == ".":
+        new_id = list(new_id)
+        new_id[-1] = ""
+        new_id = ''.join(new_id)
+    print("4단계",new_id)
+    
+    # 5단계
+    if len(new_id) == 0:
+        new_id = "a"
+    print("5단계",new_id)
+    
+    # 6단계
+    if len(new_id) >= 16:
+        new_id = new_id[:15]
+    if new_id[-1] == ".":
+        new_id = list(new_id)
+        new_id[-1] = ""
+        new_id = ''.join(new_id)
+    print("6단계",new_id)
+    
+    # 7단계
+    while len(new_id) < 3:
+        new_id = list(new_id)
+        new_id.append(new_id[-1])
+    print("7단계",new_id)
+
+    return ''. join(new_id)
