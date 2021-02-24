@@ -1,0 +1,14 @@
+def solution(n, lost, reserve):
+        
+    reserve2 = list(set(reserve) - set(lost))
+    lost2 = list(set(lost) - set(reserve))
+        
+    for i in reserve2:
+        a = i-1
+        b = i+1
+        if a in lost2:
+            lost2.remove(a)
+        elif b in lost2:
+            lost2.remove(b)
+            
+    return n-len(lost2)
