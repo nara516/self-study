@@ -1,0 +1,40 @@
+def solution(answers):
+    result = []
+    
+    answer = [[1,2,3,4,5],[2,1,2,3,2,4,2,5],[3,3,1,1,2,2,4,4,5,5]]
+    
+    student1, student2, student3 = 0, 0, 0
+    num1, num2, num3 = 0, 0, 0
+    
+    for i in answers:
+        
+        if num1 == len(answer[0]):
+            num1 = 0
+        
+        if num2 == len(answer[1]):
+            num2 = 0
+        
+        if num3 == len(answer[2]):
+            num3 = 0
+            
+            
+        if answer[0][num1] == i:
+            student1 += 1
+        num1 += 1
+            
+        if answer[1][num2] == i:
+            student2 += 1
+        num2 += 1
+        
+        if answer[2][num3] == i:
+            student3 += 1
+        num3 += 1
+    
+    student = [student1, student2, student3]
+    
+    for number, score in enumerate(student): 
+    
+        if score == max(student): 
+            result.append(number+1)
+            
+    return result
